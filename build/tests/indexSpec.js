@@ -42,13 +42,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../index"));
 var request = (0, supertest_1.default)(index_1.default);
-describe('Test api/iamges/upload', function () {
-    it('correct image format uploaded', function () { return __awaiter(void 0, void 0, void 0, function () {
+describe("Test api/iamges/upload", function () {
+    it("correct image format uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/api/images/upload')
-                        .attach('fullimage', "".concat(process.cwd(), "/src/tests/assets/images/image_test.png"))];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .attach("fullimage", "".concat(process.cwd(), "/src/tests/assets/images/image_test.png"))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);
@@ -56,11 +57,13 @@ describe('Test api/iamges/upload', function () {
             }
         });
     }); });
-    it('no image uploaded', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it("no image uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/api/images/upload').field('Content-Type', 'multipart/form-data')];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .field("Content-Type", "multipart/form-data")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
@@ -68,12 +71,13 @@ describe('Test api/iamges/upload', function () {
             }
         });
     }); });
-    it('incorrect key value', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it("incorrect key value", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/api/images/upload')
-                        .attach('filename', "".concat(process.cwd(), "/src/tests/assets/images/image_test.png"))];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .attach("filename", "".concat(process.cwd(), "/src/tests/assets/images/image_test.png"))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(500);
@@ -81,12 +85,13 @@ describe('Test api/iamges/upload', function () {
             }
         });
     }); });
-    it('incorrect key value and no image choosen', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it("incorrect key value and no image choosen", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/api/images/upload')
-                        .attach('filename', '')];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .attach("filename", "")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
@@ -95,12 +100,12 @@ describe('Test api/iamges/upload', function () {
         });
     }); });
 });
-describe('Test api/images endpoint responses', function () {
-    it('correct query parameters', function () { return __awaiter(void 0, void 0, void 0, function () {
+describe("Test api/images endpoint responses", function () {
+    it("correct query parameters", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/api/images?filename=image&width=100&height=100')];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=image_test&width=100&height=100")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);
@@ -108,11 +113,11 @@ describe('Test api/images endpoint responses', function () {
             }
         });
     }); });
-    it('undefined width', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it("undefined width", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/api/images?filename=image&height=100')];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=image&height=100")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
@@ -120,11 +125,11 @@ describe('Test api/images endpoint responses', function () {
             }
         });
     }); });
-    it('undefined hight', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it("undefined hight", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/api/images?filename=image&width=100')];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=image&width=100")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
@@ -132,11 +137,11 @@ describe('Test api/images endpoint responses', function () {
             }
         });
     }); });
-    it('undefined filename', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it("undefined filename", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/api/images?filename=img&height=100')];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=img&height=100")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);

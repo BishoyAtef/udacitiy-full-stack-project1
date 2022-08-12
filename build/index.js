@@ -40,70 +40,77 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var jimp_1 = __importDefault(require("jimp"));
 var multer_1 = __importDefault(require("multer"));
-require('dotenv').config();
+var fs_1 = __importDefault(require("fs"));
+var path_1 = __importDefault(require("path"));
+var resizer_1 = __importDefault(require("./imageProcessing/resizer"));
 var app = (0, express_1.default)();
 var port = 8000;
-var storage = multer_1.default.diskStorage({
+var myStorage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "assets/full");
     },
     filename: function (req, file, cb) {
         //store image in .png format
-        cb(null, file.originalname.substring(0, file.originalname.lastIndexOf('.')) + '_full.png');
-    }
+        cb(null, file.originalname.substring(0, file.originalname.lastIndexOf(".")) +
+            ".jpg");
+    },
 });
 var fileFilter = function (req, file, cb) {
-    //specify the accepted file types .jpep and .png only 
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg')
+    //specify the accepted file types .jpep and .png only
+    if (file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg")
         cb(null, true); //save the image
     else
-        cb(null, false); //don't throw error and simply ignore the image 
+        cb(null, false); //don't throw error and simply ignore the image
 };
 var upload = (0, multer_1.default)({
-    storage: storage,
+    storage: myStorage,
     limits: {
         fileSize: 1024 * 1024 * 5, //maximum image size 5MB
     },
-    fileFilter: fileFilter
+    fileFilter: fileFilter,
 });
 app.listen(port, function () {
     console.log("app started listening at ".concat(port));
 });
-app.post('/api/images/upload', upload.single('fullimage'), function (req, res) {
+app.post("/api/images/upload", upload.single("fullimage"), function (req, res) {
     if (req.file === undefined)
         res.status(400).send("please choose an image");
     else
         res.send("images saved successfuly");
 });
-app.get('/api/images', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var image, width, height, error_1;
+app.get("/api/images", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var imagepath, resizedimagepath, width, height, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, jimp_1.default.read("".concat(process.cwd(), "/assets/full/").concat(req.query.filename, "_full.png"))];
-            case 1:
-                image = _a.sent();
+                _a.trys.push([0, 4, , 5]);
+                imagepath = path_1.default.join("./assets/full", req.query.filename + ".jpg");
+                resizedimagepath = path_1.default.join("./assets/thumb", ((req.query.filename +
+                    req.query.width) + req.query.height) +
+                    ".jpg");
+                if (!!fs_1.default.existsSync(resizedimagepath)) return [3 /*break*/, 2];
                 width = parseInt(req.query.width);
                 height = parseInt(req.query.height);
-                image.resize(width, height, function (err) {
-                    //handling invalide parameter for the resizer
-                    if (err)
-                        throw err;
-                })
-                    .write("".concat(process.cwd(), "/assets/thumb/").concat(req.query.filename, "_thumb.png")); //store resized image in .png format
-                res.sendFile("".concat(process.cwd(), "/assets/thumb/").concat(req.query.filename, "_thumb.png"));
+                return [4 /*yield*/, (0, resizer_1.default)(req.query.filename, imagepath, width, height)];
+            case 1:
+                _a.sent();
+                fs_1.default.createReadStream(resizedimagepath).pipe(res.status(200));
                 return [3 /*break*/, 3];
             case 2:
+                fs_1.default.createReadStream(resizedimagepath).pipe(res.status(200));
+                _a.label = 3;
+            case 3: return [3 /*break*/, 5];
+            case 4:
                 error_1 = _a.sent();
                 if (error_1 instanceof Error)
                     res.status(400).send(error_1.message);
                 else
-                    res.send("invalid parameters");
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                    res.status(400).send("invalid parameters");
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); });
