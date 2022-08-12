@@ -41,15 +41,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../index"));
+var path_1 = __importDefault(require("path"));
 var request = (0, supertest_1.default)(index_1.default);
 describe("Test api/iamges/upload", function () {
+    var imagePath = path_1.default.join('./src/tests/assets/images', 'test.jpg');
     it("correct image format uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request
                         .post("/api/images/upload")
-                        .attach("fullimage", "".concat(process.cwd(), "/src/tests/assets/images/image_test.png"))];
+                        .attach("fullimage", imagePath)];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);
@@ -77,7 +79,7 @@ describe("Test api/iamges/upload", function () {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request
                         .post("/api/images/upload")
-                        .attach("filename", "".concat(process.cwd(), "/src/tests/assets/images/image_test.png"))];
+                        .attach("filename", imagePath)];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(500);
@@ -101,11 +103,14 @@ describe("Test api/iamges/upload", function () {
     }); });
 });
 describe("Test api/images endpoint responses", function () {
+    var image = 'pic';
+    var width = 500;
+    var height = 300;
     it("correct query parameters", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get("/api/images?filename=image_test&width=100&height=100")];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=".concat(image, "&width=").concat(width, "&height=").concat(height))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);
@@ -117,7 +122,7 @@ describe("Test api/images endpoint responses", function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get("/api/images?filename=image&height=100")];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=".concat(image, "&height=").concat(height))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
@@ -129,7 +134,7 @@ describe("Test api/images endpoint responses", function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get("/api/images?filename=image&width=100")];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=".concat(image, "&width=").concat(width))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
@@ -141,7 +146,7 @@ describe("Test api/images endpoint responses", function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get("/api/images?filename=img&height=100")];
+                case 0: return [4 /*yield*/, request.get("/api/images?filename=img&height=".concat(height))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(400);
