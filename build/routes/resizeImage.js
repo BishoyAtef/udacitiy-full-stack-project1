@@ -39,56 +39,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var resizer_1 = __importDefault(require("../../imageProcessing/resizer"));
+var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
-describe('Test image processing module', function () {
-    var filename = 'pic';
-    var width = 100;
-    var height = 100;
-    var imagePath = path_1.default.join('./asstes/full', 'pic.jpg');
-    it('should reject promise with an error in case of invalid dimention', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, imagePath, -100, 200)).toBeRejectedWithError()];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, imagePath, 0, 200)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should reject promise with an error in case for corrupted image path', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var badImagePath;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    badImagePath = path_1.default.join('./asstesss/full', 'pic.jpg');
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, badImagePath, width, height)).toBeRejectedWithError()];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, '', width, height)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should reject promise with an error in case for wrong file name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var badFilename;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    badFilename = 'picc';
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(badFilename, imagePath, width, height)).toBeRejectedWithError()];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(badFilename, imagePath, width, height)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-});
+var resizer_1 = __importDefault(require("../imageProcessing/resizer"));
+var resizeImage = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var imagepath, resizedimagepath, width, height, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 4, , 5]);
+                imagepath = path_1.default.join("./assets/full", req.query.filename + ".jpg");
+                resizedimagepath = path_1.default.join("./assets/thumb", ((req.query.filename + req.query.width) +
+                    req.query.height) + ".jpg");
+                if (!!fs_1.default.existsSync(resizedimagepath)) return [3 /*break*/, 2];
+                width = parseInt(req.query.width);
+                height = parseInt(req.query.height);
+                return [4 /*yield*/, (0, resizer_1.default)(req.query.filename, imagepath, width, height)];
+            case 1:
+                _a.sent();
+                fs_1.default.createReadStream(resizedimagepath).pipe(res.status(200));
+                return [3 /*break*/, 3];
+            case 2:
+                fs_1.default.createReadStream(resizedimagepath).pipe(res.status(200));
+                _a.label = 3;
+            case 3: return [3 /*break*/, 5];
+            case 4:
+                error_1 = _a.sent();
+                if (error_1 instanceof Error)
+                    res.status(400).send(error_1.message);
+                else
+                    res.status(400).send("invalid parameters");
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.default = resizeImage;

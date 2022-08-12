@@ -40,70 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
-var index_1 = __importDefault(require("../index"));
-var path_1 = __importDefault(require("path"));
+var index_1 = __importDefault(require("../../index"));
 var request = (0, supertest_1.default)(index_1.default);
-describe("Test api/iamges/upload", function () {
-    var imagePath = path_1.default.join('./src/tests/assets/images', 'test.jpg');
-    it("correct image format uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post("/api/images/upload")
-                        .attach("fullimage", imagePath)];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it("no image uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post("/api/images/upload")
-                        .field("Content-Type", "multipart/form-data")];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(400);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it("incorrect key value", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post("/api/images/upload")
-                        .attach("filename", imagePath)];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(500);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it("incorrect key value and no image choosen", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .post("/api/images/upload")
-                        .attach("filename", "")];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(400);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-});
 describe("Test api/images endpoint responses", function () {
-    var image = 'pic';
+    var image = "pic";
     var width = 500;
     var height = 300;
     it("correct query parameters", function () { return __awaiter(void 0, void 0, void 0, function () {

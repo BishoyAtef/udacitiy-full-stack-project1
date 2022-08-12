@@ -39,54 +39,64 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var resizer_1 = __importDefault(require("../../imageProcessing/resizer"));
+var supertest_1 = __importDefault(require("supertest"));
 var path_1 = __importDefault(require("path"));
-describe('Test image processing module', function () {
-    var filename = 'pic';
-    var width = 100;
-    var height = 100;
-    var imagePath = path_1.default.join('./asstes/full', 'pic.jpg');
-    it('should reject promise with an error in case of invalid dimention', function () { return __awaiter(void 0, void 0, void 0, function () {
+var index_1 = __importDefault(require("../../index"));
+var request = (0, supertest_1.default)(index_1.default);
+describe("Test api/iamges/upload", function () {
+    var imagePath = path_1.default.join("./src/tests/assets/images", "test.jpg");
+    it("correct image format uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, imagePath, -100, 200)).toBeRejectedWithError()];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .attach("fullimage", imagePath)];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, imagePath, 0, 200)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('should reject promise with an error in case for corrupted image path', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var badImagePath;
+    it("no image uploaded", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    badImagePath = path_1.default.join('./asstesss/full', 'pic.jpg');
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, badImagePath, width, height)).toBeRejectedWithError()];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .field("Content-Type", "multipart/form-data")];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, '', width, height)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
+                    response = _a.sent();
+                    expect(response.status).toBe(400);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('should reject promise with an error in case for wrong file name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var badFilename;
+    it("incorrect key value", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    badFilename = 'picc';
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(badFilename, imagePath, width, height)).toBeRejectedWithError()];
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .attach("filename", imagePath)];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(badFilename, imagePath, width, height)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
+                    response = _a.sent();
+                    expect(response.status).toBe(500);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it("incorrect key value and no image choosen", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .post("/api/images/upload")
+                        .attach("filename", "")];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(400);
                     return [2 /*return*/];
             }
         });
