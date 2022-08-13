@@ -42,10 +42,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var resizer_1 = __importDefault(require("../../imageProcessing/resizer"));
 var path_1 = __importDefault(require("path"));
 describe('Test image processing module', function () {
-    var filename = 'pic';
+    var filename = 'flower';
     var width = 100;
     var height = 100;
-    var imagePath = path_1.default.join('./asstes/full', 'pic.jpg');
+    var imagePath = path_1.default.join('./assets/full', 'flower.jpg');
+    it('should work fine', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, imagePath, width, height)).toBeResolved()];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('should reject promise with an error in case of invalid dimention', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -69,22 +79,6 @@ describe('Test image processing module', function () {
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, expectAsync((0, resizer_1.default)(filename, '', width, height)).toBeRejectedWithError()];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should reject promise with an error in case for wrong file name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var badFilename;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    badFilename = 'picc';
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(badFilename, imagePath, width, height)).toBeRejectedWithError()];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, expectAsync((0, resizer_1.default)(badFilename, imagePath, width, height)).toBeRejectedWithError()];
                 case 2:
                     _a.sent();
                     return [2 /*return*/];
